@@ -17,3 +17,4 @@ export interface Job {
   postedDaysAgo: number;
   applicants: number;
 }
+

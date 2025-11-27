@@ -5,7 +5,7 @@
 import React, { useState } from 'react';
 
 // Define the structure for the search form data
-interface SearchFormData {
+export interface SearchFormData {
   searchTerm: string;
   location: string;
 }
