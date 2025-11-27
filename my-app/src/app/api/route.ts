@@ -27,6 +27,7 @@ export interface JobType {
 // --------- GET (already done) ---------
 export async function GET(req: NextRequest) {
   await connectDB();
+  console.log("db connect");
 
   const { searchTerm, location, company, role, skills } =
     Object.fromEntries(req.nextUrl.searchParams);

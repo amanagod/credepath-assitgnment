@@ -1,11 +1,10 @@
-// components/JobBoard.tsx
 "use client";
 
 import React, { useState, useMemo, useEffect } from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import JobSearchBar, { SearchFormData } from "./Searchbar";
 
-/** Job type (self-contained so file works without external types file) */
+/** Job type */
 interface Job {
   id: number;
   role: string;
@@ -21,138 +20,6 @@ interface Job {
   createdAt?: Date;
   updatedAt?: Date;
 }
-
-////////////////////////////////////////
-// const companies = ["CredePath Tech", "DataFlow Systems", "WebCrafters LLC", "CloudWorks"];
-// const roles = ["Frontend Engineer", "Backend Developer", "Full Stack Developer", "DevOps Engineer"];
-// const skills = ["React", "Node.js", "TypeScript", "AWS", "Docker", "TailwindCSS", "MongoDB", "Kubernetes"];
-// const locations = ["New Delhi", "Bengaluru", "Remote", "Hyderabad"];
-// const salaries = ["₹12,00,000 - ₹18,00,000 / yr", "₹15,00,000 - ₹22,00,000 / yr", "₹18,00,000 - ₹30,00,000 / yr", "₹20,00,000 - ₹28,00,000 / yr"];
-
-// function getRandomItem<T>(arr: T[]): T {
-//   return arr[Math.floor(Math.random() * arr.length)];
-// }
-
-// function getRandomSkills(allSkills: string[], count: number = 3): string[] {
-//   const shuffled = [...allSkills].sort(() => 0.5 - Math.random());
-//   return shuffled.slice(0, count);
-// }
-
-// function getRandomNumber(min: number, max: number): number {
-//   return Math.floor(Math.random() * (max - min + 1)) + min;
-// }
-
-// const initialJobs: Job[] = Array.from({ length: 50 }, (_, i) => {
-//   const company = getRandomItem(companies);
-//   const role = getRandomItem(roles);
-//   const location = getRandomItem(locations);
-//   const salary = getRandomItem(salaries);
-
-//   return {
-//     id: i + 1,
-//     role,
-//     company,
-//     experience: `${getRandomNumber(2, 8)} - ${getRandomNumber(3, 10)} yrs`,
-//     location,
-//     salary,
-//     skills: getRandomSkills(skills, 3),
-//     description: {
-//       responsibilities: "Build and maintain features, write clean code, collaborate with team.",
-//       requirements: "Experience with relevant tech stack, good coding practices, team collaboration.",
-//       niceToHave: "Knowledge of cloud, testing, and CI/CD pipelines.",
-//     },
-//     aboutCompany: `${company} is a leading company in its domain, providing innovative solutions.`,
-//     postedDaysAgo: getRandomNumber(0, 10),
-//     applicants: getRandomNumber(5, 50),
-//   };
-// });
-
-
-
-////////////////////////////////////////////
-/** realistic default job data */
-const initialJobs: Job[] = [
-  {
-    id: 1,
-    role: "Frontend Engineer",
-    company: "CredePath Tech",
-    experience: "2 - 4 yrs",
-    location: "New Delhi",
-    salary: "₹12,00,000 - ₹18,00,000 / yr",
-    skills: ["React", "TypeScript", "TailwindCSS"],
-    description: {
-      responsibilities:
-        "Build and maintain user-facing features using React and TypeScript. Optimize components for performance and accessibility.",
-      requirements:
-        "2+ years React experience, strong understanding of component patterns and state management (Redux/Context).",
-      niceToHave: "Experience with Next.js, testing-library and CI/CD pipelines.",
-    },
-    aboutCompany:
-      "CredePath is a hiring platform focused on helping early-career engineers find meaningful roles at growth-stage startups.",
-    postedDaysAgo: 2,
-    applicants: 37,
-  },
-  {
-    id: 2,
-    role: "Backend Developer",
-    company: "DataFlow Systems",
-    experience: "3 - 5 yrs",
-    location: "Bengaluru",
-    salary: "₹15,00,000 - ₹22,00,000 / yr",
-    skills: ["Node.js", "Express", "MongoDB"],
-    description: {
-      responsibilities:
-        "Design and develop RESTful APIs and microservices. Ensure high availability and reliability of backend systems.",
-      requirements:
-        "3+ years building production-grade Node.js services. Good knowledge of database modeling and performance tuning.",
-      niceToHave: "Experience with message queues (RabbitMQ/Kafka) and cloud-managed databases.",
-    },
-    aboutCompany:
-      "DataFlow builds high-throughput data infrastructure for analytics teams at enterprise companies.",
-    postedDaysAgo: 5,
-    applicants: 14,
-  },
-  {
-    id: 3,
-    role: "Full Stack Developer",
-    company: "WebCrafters LLC",
-    experience: "4 - 7 yrs",
-    location: "Remote",
-    salary: "₹20,00,000 - ₹28,00,000 / yr",
-    skills: ["React", "Node.js", "TypeScript"],
-    description: {
-      responsibilities:
-        "Own features end-to-end: frontend UI, backend APIs and deployment. Work closely with product and design.",
-      requirements:
-        "Experience with full stack projects and cloud deployments. Strong JS and TypeScript knowledge.",
-      niceToHave: "Familiarity with observability (Sentry/Datadog) and infra-as-code.",
-    },
-    aboutCompany:
-      "WebCrafters delivers modern web products for e-commerce and SaaS customers across US and EU markets.",
-    postedDaysAgo: 1,
-    applicants: 42,
-  },
-  {
-    id: 4,
-    role: "DevOps Engineer",
-    company: "CloudWorks",
-    experience: "5 - 8 yrs",
-    location: "Hyderabad",
-    salary: "₹18,00,000 - ₹30,00,000 / yr",
-    skills: ["AWS", "Docker", "Kubernetes"],
-    description: {
-      responsibilities:
-        "Build CI/CD pipelines, manage cloud infra, and improve system reliability.",
-      requirements:
-        "Solid experience with Kubernetes and AWS. Infrastructure automation using Terraform/CloudFormation.",
-      niceToHave: "Observability stack knowledge and scripting in Python/Bash.",
-    },
-    aboutCompany:
-      "CloudWorks provides managed cloud solutions and helps teams migrate complex workloads to the cloud.",
-    postedDaysAgo: 7,
-    applicants: 9,
-  },
-];
 
 /** filter options */
 const filterOptions = {
@@ -172,10 +39,9 @@ type Filters = {
 };
 
 const JobBoard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"Recommended" | "Applied" | "Saved">(
-    "Recommended"
-  );
-  const [activeJob, setActiveJob] = useState<Job | null>(initialJobs[0]);
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [activeTab, setActiveTab] = useState<"Recommended" | "Applied" | "Saved">("Recommended");
+  const [activeJob, setActiveJob] = useState<Job | null>(null);
   const [filters, setFilters] = useState<Filters>({
     Company: "",
     Jobs: "",
@@ -184,27 +50,53 @@ const JobBoard: React.FC = () => {
     Salary: "",
   });
 
+  /** Fetch jobs from backend API */
+  const fetchJobs = async (searchData?: SearchFormData) => {
+    const params = new URLSearchParams();
+    if (searchData?.searchTerm) params.append("searchTerm", searchData.searchTerm);
+    if (searchData?.location) params.append("location", searchData.location);
+
+    if (filters.Company) params.append("company", filters.Company);
+    if (filters.Jobs) params.append("role", filters.Jobs);
+    if (filters.Skills) params.append("skills", filters.Skills);
+
+    try {
+      const res = await fetch(`/api?${params.toString()}`);
+      if (!res.ok) throw new Error("Failed to fetch jobs");
+      const data: Job[] = await res.json();
+      setJobs(data);
+      if (data.length > 0) setActiveJob(data[0]);
+      else setActiveJob(null);
+    } catch (err) {
+      console.error(err);
+      setJobs([]);
+      setActiveJob(null);
+    }
+  };
+
+  /** Handle filter changes */
   const handleFilterChange = (key: keyof Filters, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: prev[key] === value ? "" : value }));
     setActiveJob(null);
   };
 
+  /** Handle tab change */
   const handleTabChange = (tab: typeof activeTab) => {
     setActiveTab(tab);
   };
 
+  /** Filter jobs locally for tabs & filter consistency */
   const filteredJobs = useMemo(() => {
-    return initialJobs.filter((job) => {
+    return jobs.filter((job) => {
       if (filters.Company && job.company !== filters.Company) return false;
-      if (filters.Jobs && !job.role.toLowerCase().includes(filters.Jobs.toLowerCase()))
-        return false;
+      if (filters.Jobs && !job.role.toLowerCase().includes(filters.Jobs.toLowerCase())) return false;
       if (filters.Location && job.location !== filters.Location) return false;
-      if (filters.Skills && !job.skills.map(s => s.toLowerCase()).includes(filters.Skills.toLowerCase()))
-        return false;
+      if (filters.Skills && !job.skills.map(s => s.toLowerCase()).includes(filters.Skills.toLowerCase())) return false;
       return true;
     });
-  }, [filters, activeTab]);
+  }, [jobs, filters, activeTab]);
 
+  /** Ensure an active job is always selected */
   useEffect(() => {
     if (!activeJob && filteredJobs.length > 0) {
       setActiveJob(filteredJobs[0]);
@@ -214,8 +106,15 @@ const JobBoard: React.FC = () => {
     }
   }, [filteredJobs, activeJob]);
 
+  /** Fetch all jobs initially */
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <JobSearchBar onSearch={(data) => fetchJobs(data)} />
+
       <JobFilterBar
         activeTab={activeTab}
         setActiveTab={handleTabChange}
@@ -256,8 +155,7 @@ const JobBoard: React.FC = () => {
 
 export default JobBoard;
 
-/* -------------------- Child components -------------------- */
-
+/* -------------------- FilterDropdown -------------------- */
 const FilterDropdown: React.FC<{
   name: keyof Filters;
   options: string[];
@@ -301,6 +199,7 @@ const FilterDropdown: React.FC<{
   );
 };
 
+/* -------------------- JobFilterBar -------------------- */
 interface JobFilterBarProps {
   activeTab: "Recommended" | "Applied" | "Saved";
   setActiveTab: (tab: "Recommended" | "Applied" | "Saved") => void;
@@ -316,11 +215,7 @@ const JobFilterBar: React.FC<JobFilterBarProps> = ({
   setFilter,
   filterOptions,
 }) => {
-  const tabs: ("Recommended" | "Applied" | "Saved")[] = [
-    "Recommended",
-    "Applied",
-    "Saved",
-  ];
+  const tabs: ("Recommended" | "Applied" | "Saved")[] = ["Recommended", "Applied", "Saved"];
 
   return (
     <div className="border-b border-gray-200 pb-3">
@@ -374,7 +269,6 @@ const JobFilterBar: React.FC<JobFilterBarProps> = ({
 };
 
 /* -------------------- JobCard -------------------- */
-
 interface JobCardProps {
   job: Job;
   isActive: boolean;
@@ -441,7 +335,6 @@ const JobCard: React.FC<JobCardProps> = ({ job, isActive, onClick }) => {
 };
 
 /* -------------------- JobDetails -------------------- */
-
 const JobDetails: React.FC<{ job: Job }> = ({ job }) => {
   const initials = job.company
     .split(" ")
